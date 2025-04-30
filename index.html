@@ -11,10 +11,12 @@
       font-family: 'Inter', sans-serif;
       background: linear-gradient(to right, #eef2f3, #ffffff);
       color: #212529;
+      margin: 0;
+      padding: 0;
     }
     .container {
       max-width: 1600px;
-      margin-top: 2rem;
+      margin-top: 1rem;
     }
     .card {
       border: none;
@@ -26,6 +28,10 @@
       font-weight: 700;
       font-size: 1.75rem;
       color: #ff6a00;
+      margin-bottom: 0.5rem;
+    }
+    .info-text {
+      margin-bottom: 0.25rem;
     }
     label {
       font-weight: 600;
@@ -72,9 +78,9 @@
 <body>
   <div class="container">
     <div class="card p-4">
-      <h1 class="card-title text-center mb-4">Simulador de Aplicações em Títulos Imobiliários</h1>
-      <p class="text-center text-muted">Todos os rendimentos e dividendos serão automaticamente reinvestidos.</p>
-      <p class="text-center text-muted">(Desenvolvido por Luiz Borges)</p>
+      <h1 class="card-title text-center">Simulador de Aplicações em Títulos Imobiliários</h1>
+      <p class="text-center text-muted info-text">Todos os rendimentos e dividendos serão automaticamente reinvestidos.</p>
+      <p class="text-center text-muted info-text">(Desenvolvido por Luiz Borges)</p>
       <form id="simuladorForm">
         <div class="row g-3">
           <div class="col-md-4">
