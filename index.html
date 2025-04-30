@@ -55,12 +55,16 @@
     }
     td {
       background-color: #fff;
+      color: #212529;
       text-align: left;
       vertical-align: middle;
     }
     td.destacado {
       background-color: #fff3cd;
       font-weight: bold;
+    }
+    .input-group-text {
+      cursor: pointer;
     }
     @media (max-width: 768px) {
       .form-row {
@@ -109,11 +113,17 @@
           </div>
           <div class="col-md-2">
             <label for="dataInicio">Início</label>
-            <input type="text" class="form-control" id="dataInicio" placeholder="dd/mm/aaaa" required />
+            <div class="input-group">
+              <input type="text" class="form-control" id="dataInicio" placeholder="dd/mm/aaaa" required />
+              <span class="input-group-text" onclick="abrirCalendario('dataInicio')">📅</span>
+            </div>
           </div>
           <div class="col-md-3">
             <label for="dataFim">Fim</label>
-            <input type="text" class="form-control" id="dataFim" placeholder="dd/mm/aaaa" required />
+            <div class="input-group">
+              <input type="text" class="form-control" id="dataFim" placeholder="dd/mm/aaaa" required />
+              <span class="input-group-text" onclick="abrirCalendario('dataFim')">📅</span>
+            </div>
           </div>
         </div>
         <div class="mt-4">
@@ -144,20 +154,31 @@
   </div>
 
   <script>
+    const abrirCalendario = (id) => {
+      flatpickr(`#${id}`, {
+        dateFormat: "d/m/Y",
+        locale: "pt",
+        allowInput: true,
+        clickOpens: true,
+        monthSelectorType: "dropdown",
+        defaultDate: document.getElementById(id).value || null
+      }).open();
+    }
+
     flatpickr("#dataInicio", {
       dateFormat: "d/m/Y",
       locale: "pt",
       allowInput: true,
-      altInput: true,
-      altFormat: "d/m/Y"
+      clickOpens: false,
+      monthSelectorType: "dropdown"
     });
 
     flatpickr("#dataFim", {
       dateFormat: "d/m/Y",
       locale: "pt",
       allowInput: true,
-      altInput: true,
-      altFormat: "d/m/Y"
+      clickOpens: false,
+      monthSelectorType: "dropdown"
     });
 
     const fmtCurrency = value => new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
@@ -165,12 +186,14 @@
     document.getElementById('simuladorForm').addEventListener('submit', function(e) {
       e.preventDefault();
 
-      const dataInicioValor = document.getElementById('dataInicio')._flatpickr.selectedDates[0];
-      const dataFimValor = document.getElementById('dataFim')._flatpickr.selectedDates[0];
+      const dataInicioValor = document.getElementById('dataInicio').value;
+      const dataFimValor = document.getElementById('dataFim').value;
       if (!dataInicioValor || !dataFimValor) return alert('Preencha as datas.');
 
-      const dataInicio = new Date(dataInicioValor);
-      const dataFim = new Date(dataFimValor);
+      const [di, mi, ai] = dataInicioValor.split("/").map(Number);
+      const [df, mf, af] = dataFimValor.split("/").map(Number);
+      const dataInicio = new Date(ai, mi - 1, di);
+      const dataFim = new Date(af, mf - 1, df);
       if (dataFim <= dataInicio) return alert('A data final deve ser após a inicial.');
 
       const preco = parseFloat(document.getElementById('preco').value);
