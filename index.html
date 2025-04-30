@@ -58,69 +58,55 @@
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(255, 105, 0, 0.2);
     }
-    th {
-      background-color: #2d3436;
-      color: #ffffff;
-      text-align: center;
-      position: sticky;
-      top: 0;
-      z-index: 10;
-    }
-    td {
-      background-color: #ffffff;
-      color: #2d3436;
-      vertical-align: middle;
-    }
-    td.destacado {
-      background-color: #ffeaa7;
-      font-weight: 600;
-    }
     @media (max-width: 768px) {
-      .table thead {
-        display: none;
-      }
-      .table, .table tbody, .table tr, .table td {
-        display: block;
-        width: 100%;
-      }
-      .table td {
-        text-align: right;
-        padding-left: 50%;
-        position: relative;
-        text-align: right;
-      }
-      .table td::before {
-        content: attr(data-label);
-        position: absolute;
-        left: 0;
-        width: 50%;
-        text-align: left;
-        font-weight: 600;
-      }
-      .form-control {
-        font-size: 1rem;
-      }
-      .result-card h5 {
-        font-size: 1rem;
-        margin-bottom: 0.25rem;
-      }
-      .result-card .value {
+      .card-title {
         font-size: 1.25rem;
+      }
+      .result-card {
+        margin-bottom: 0.75rem !important;
+      }
+      .result-card .card-body {
+        padding: 0.75rem !important;
+      }
+      .table thead {
+        display: table-header-group;
+      }
+      .table td:first-child::before {
+        content: "Mês: ";
+        font-weight: 600;
+        display: inline-block;
+        width: 80px;
+      }
+      .table td:not(:first-child)::before {
+        content: attr(data-label);
+        font-weight: 600;
+        display: inline-block;
+        width: 120px;
       }
     }
     .table-container {
       max-height: 60vh;
       overflow-y: auto;
       -webkit-overflow-scrolling: touch;
+      border-radius: 1rem;
+      margin: 0 -1rem;
+      padding: 0 1rem;
     }
     .result-cards {
       margin-top: 1.5rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
     }
     .result-card {
       border-radius: 1rem;
-      padding: 1rem;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
       transition: transform 0.3s ease;
+      flex: 1 1 100%;
+      max-width: 100%;
+    }
+    .result-card .card-body {
+      padding: 1rem;
     }
     .result-card:hover {
       transform: translateY(-5px);
@@ -142,6 +128,9 @@
     }
     .result-card.blue {
       border-left: 4px solid #007bff;
+    }
+    .table td {
+      vertical-align: middle !important;
     }
   </style>
 </head>
@@ -211,25 +200,25 @@
     <div id="resultado" class="mt-4" style="display:none;">
       <div class="row g-3 result-cards">
         <div class="col-12 col-md-4">
-          <div class="card result-card blue h-100">
-            <div class="card-body text-center">
-              <h5 class="card-title">Aporte Total (Seu Dinheiro)</h5>
+          <div class="card result-card blue">
+            <div class="card-body text-center p-3">
+              <h5 class="card-title mb-1">Aporte Total</h5>
               <div class="value" id="totalAporte">R$ 0,00</div>
             </div>
           </div>
         </div>
         <div class="col-12 col-md-4">
-          <div class="card result-card positive h-100">
-            <div class="card-body text-center">
-              <h5 class="card-title">Lucro</h5>
+          <div class="card result-card positive">
+            <div class="card-body text-center p-3">
+              <h5 class="card-title mb-1">Lucro</h5>
               <div class="value" id="totalLucro">R$ 0,00</div>
             </div>
           </div>
         </div>
         <div class="col-12 col-md-4">
-          <div class="card result-card h-100">
-            <div class="card-body text-center">
-              <h5 class="card-title">Valor Final</h5>
+          <div class="card result-card">
+            <div class="card-body text-center p-3">
+              <h5 class="card-title mb-1">Valor Final</h5>
               <div class="value" id="valorTotalFinal">R$ 0,00</div>
             </div>
           </div>
@@ -241,14 +230,14 @@
           <table class="table table-hover mb-0">
             <thead>
               <tr>
-                <th>Mês</th>
-                <th>Aporte</th>
-                <th>Dividendos</th>
-                <th>Reinvestimento</th>
-                <th>Cotas Compradas</th>
-                <th>Total de Cotas</th>
-                <th>Valor Total</th>
-                <th>Acumulado</th>
+                <th class="text-center">Mês</th>
+                <th class="text-center">Aporte</th>
+                <th class="text-center">Dividendos</th>
+                <th class="text-center">Reinvestimento</th>
+                <th class="text-center">Cotas Compradas</th>
+                <th class="text-center">Total de Cotas</th>
+                <th class="text-center">Valor Total</th>
+                <th class="text-center">Acumulado</th>
               </tr>
             </thead>
             <tbody id="tabelaCorpo"></tbody>
@@ -320,7 +309,10 @@
       const tbody = document.getElementById('tabelaCorpo');
       tbody.innerHTML = '';
 
+      // Inicializar com o primeiro dia do mês atual
       let current = new Date();
+      current.setDate(1);
+      
       let totalCotas = qtdInicial;
       let acumulado = 0;
       const totalMeses = duracao * 12;
@@ -342,18 +334,19 @@
         const mes = String(current.getMonth() + 1).padStart(2, '0');
         const ano = current.getFullYear();
 
-        // Versão mobile-first da tabela
+        // Adicionar linha à tabela
         html += `<tr>
           <td data-label="Mês" class="text-center">${mes}/${ano}</td>
           <td data-label="Aporte">${fmtCurrency(aporte)}</td>
           <td data-label="Dividendos" class="destacado">${fmtCurrency(dividendos)}</td>
           <td data-label="Reinvestimento">${fmtCurrency(reinvest)}</td>
-          <td data-label="Cotas Compradas">${fmtNumber(cotasCompradas)}</td>
-          <td data-label="Total de Cotas">${fmtNumber(totalCotas)}</td>
-          <td data-label="Valor Total">${fmtCurrency(valorTotal)}</td>
+          <td data-label="Cotas">${fmtNumber(cotasCompradas)}</td>
+          <td data-label="Total">${fmtNumber(totalCotas)}</td>
+          <td data-label="Valor">${fmtCurrency(valorTotal)}</td>
           <td data-label="Acumulado">${fmtCurrency(acumulado)}</td>
         </tr>`;
         
+        // Avançar para o próximo mês
         current.setMonth(current.getMonth() + 1);
       }
 
