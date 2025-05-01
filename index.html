@@ -224,8 +224,7 @@
                 <th class="text-center">Dividendos Mensais</th>
                 <th class="text-center">Cotas Compradas</th>
                 <th class="text-center">Cotas Totais</th>
-                <th class="text-center">Valor Investido</th> <!-- Alterado aqui -->
-                <th class="text-center">Capital Aplicado</th>
+                <th class="text-center">Valor Investido</th>
               </tr>
             </thead>
             <tbody id="tabelaCorpo"></tbody>
@@ -299,10 +298,9 @@
 
       // Inicializa a data corretamente
       let current = new Date();
-      current.setDate(1); // Garante que sempre comece no primeiro dia do mês
+      current.setDate(1); // Garante início no primeiro dia do mês
       
       let totalCotas = qtdInicial;
-      let acumulado = 0;
       const totalMeses = duracao * 12;
       let html = '';
       let totalFinal = 0;
@@ -316,7 +314,6 @@
         const cotasCompradas = reinvest / preco;
         totalCotas += cotasCompradas;
         const valorTotal = totalCotas * preco;
-        acumulado += reinvest;
         totalFinal = valorTotal;
 
         const mes = String(current.getMonth() + 1).padStart(2, '0');
@@ -328,8 +325,7 @@
           <td data-label="Dividendos Mensais" class="destacado">${fmtCurrency(dividendos)}</td>
           <td data-label="Cotas Compradas">${fmtNumber(cotasCompradas)}</td>
           <td data-label="Cotas Totais">${fmtNumber(totalCotas)}</td>
-          <td data-label="Valor Investido">${fmtCurrency(valorTotal)}</td> <!-- Alterado aqui -->
-          <td data-label="Capital Aplicado">${fmtCurrency(acumulado)}</td>
+          <td data-label="Valor Investido">${fmtCurrency(valorTotal)}</td>
         </tr>`;
         
         current.setMonth(current.getMonth() + 1);
