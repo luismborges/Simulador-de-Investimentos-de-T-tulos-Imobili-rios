@@ -17,7 +17,7 @@
     .container {
       max-width: 1600px;
       margin-top: 1.5rem;
-      padding: 0 0.5rem;
+      padding: 0 1rem;
     }
     .card {
       border: none;
@@ -57,23 +57,6 @@
       background-color: #e65c00;
       transform: translateY(-2px);
       box-shadow: 0 4px 12px rgba(255, 105, 0, 0.2);
-    }
-    .result-cards {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-    .result-card .card-body {
-      padding: 0.75rem 1rem;
-    }
-    .result-card h5 {
-      font-size: 1rem;
-      margin-bottom: 0.25rem;
-    }
-    .result-card .value {
-      font-size: 1.25rem;
-      font-weight: 700;
     }
     .table-container {
       max-height: 60vh;
@@ -127,7 +110,6 @@
         text-align: left;
         font-weight: 600;
         opacity: 0.8;
-        display: block;
       }
       .result-card .card-body {
         padding: 0.5rem;
@@ -202,28 +184,31 @@
     </div>
 
     <div id="resultado" class="mt-3" style="display:none;">
-      <div class="result-cards d-flex justify-content-between">
-        <div class="result-card flex-fill me-1">
-          <div class="card border border-1 border-info">
-            <div class="card-body text-center p-2">
+      <div class="result-cards d-flex flex-column flex-md-row gap-2">
+        <div class="result-card flex-fill">
+          <div class="card border border-info p-2">
+            <div class="card-body text-center">
               <h5 class="card-title mb-1">Aporte Total</h5>
               <div class="value" id="totalAporte">R$ 0,00</div>
+              <small class="text-muted d-none d-md-block">Seu dinheiro injetado</small>
             </div>
           </div>
         </div>
-        <div class="result-card flex-fill mx-1">
-          <div class="card border border-1 border-success">
-            <div class="card-body text-center p-2">
+        <div class="result-card flex-fill">
+          <div class="card border border-success p-2">
+            <div class="card-body text-center">
               <h5 class="card-title mb-1">Lucro</h5>
               <div class="value" id="totalLucro">R$ 0,00</div>
+              <small class="text-muted d-none d-md-block">Valor Final - Aporte Total</small>
             </div>
           </div>
         </div>
-        <div class="result-card flex-fill ms-1">
-          <div class="card border border-1 border-secondary">
-            <div class="card-body text-center p-2">
+        <div class="result-card flex-fill">
+          <div class="card border border-secondary p-2">
+            <div class="card-body text-center">
               <h5 class="card-title mb-1">Valor Final</h5>
               <div class="value" id="valorTotalFinal">R$ 0,00</div>
+              <small class="text-muted d-none d-md-block">Saldo após o período</small>
             </div>
           </div>
         </div>
@@ -234,14 +219,13 @@
           <table class="table table-hover mb-0">
             <thead>
               <tr>
-                <th data-label="Mês" class="text-center">Mês</th>
-                <th data-label="Aporte" class="text-center">Aporte</th>
-                <th data-label="Dividendos" class="text-center">Dividendos</th>
-                <th data-label="Reinvestimento" class="text-center">Reinvestimento</th>
-                <th data-label="Cotas" class="text-center">Cotas Compradas</th>
-                <th data-label="Total" class="text-center">Total de Cotas</th>
-                <th data-label="Valor" class="text-center">Valor Total</th>
-                <th data-label="Acumulado" class="text-center">Acumulado</th>
+                <th class="text-center">Mês</th>
+                <th class="text-center">Aporte Mensal</th>
+                <th class="text-center">Dividendos Mensais</th>
+                <th class="text-center">Cotas Compradas</th>
+                <th class="text-center">Cotas Totais</th>
+                <th class="text-center">Valor Investido</th> <!-- Alterado aqui -->
+                <th class="text-center">Capital Aplicado</th>
               </tr>
             </thead>
             <tbody id="tabelaCorpo"></tbody>
@@ -315,7 +299,7 @@
 
       // Inicializa a data corretamente
       let current = new Date();
-      current.setDate(1);
+      current.setDate(1); // Garante que sempre comece no primeiro dia do mês
       
       let totalCotas = qtdInicial;
       let acumulado = 0;
@@ -340,13 +324,12 @@
 
         html += `<tr>
           <td data-label="Mês" class="text-center">${mes}/${ano}</td>
-          <td data-label="Aporte">${fmtCurrency(aporte)}</td>
-          <td data-label="Dividendos" class="destacado">${fmtCurrency(dividendos)}</td>
-          <td data-label="Reinvestimento">${fmtCurrency(reinvest)}</td>
-          <td data-label="Cotas">${fmtNumber(cotasCompradas)}</td>
-          <td data-label="Total">${fmtNumber(totalCotas)}</td>
-          <td data-label="Valor">${fmtCurrency(valorTotal)}</td>
-          <td data-label="Acumulado">${fmtCurrency(acumulado)}</td>
+          <td data-label="Aporte Mensal">${fmtCurrency(aporte)}</td>
+          <td data-label="Dividendos Mensais" class="destacado">${fmtCurrency(dividendos)}</td>
+          <td data-label="Cotas Compradas">${fmtNumber(cotasCompradas)}</td>
+          <td data-label="Cotas Totais">${fmtNumber(totalCotas)}</td>
+          <td data-label="Valor Investido">${fmtCurrency(valorTotal)}</td> <!-- Alterado aqui -->
+          <td data-label="Capital Aplicado">${fmtCurrency(acumulado)}</td>
         </tr>`;
         
         current.setMonth(current.getMonth() + 1);
